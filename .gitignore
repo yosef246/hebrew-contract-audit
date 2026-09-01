@@ -1,0 +1,22 @@
+# secrets
+.env
+.env.local
+*.token
+
+# runtime data (checkpoints, telemetry) — not committed
+data/*
+!data/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# node (web/)
+node_modules/
+.next/
+
+# os / editor
+.DS_Store
+Thumbs.db
