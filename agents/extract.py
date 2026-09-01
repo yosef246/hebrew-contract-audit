@@ -1,6 +1,6 @@
 # extract.py — ClauseExtractor דטרמיניסטי (קוד רגיל, רץ לפני הגרף).
-# פורט של src/lib/chunking/contract-chunker.ts, עם שינוי מכוון אחד: trigger מפורש ל-fallback
-# (לא רק "אפס סעיפים ממוספרים" כמו ב-TS) — < MIN_SECTIONS או avg length > MAX_AVG_CHARS.
+# פורט של src/lib/chunking/contract-chunker.ts, עם שינוי מכוון: trigger מפורש ל-fallback
+# (לא רק "אפס סעיפים ממוספרים" כמו ב-TS) — MIN_SECTIONS / MAX_AVG_CHARS / MAX_SINGLE_CHARS.
 import re
 import statistics
 from pydantic import BaseModel
@@ -9,11 +9,11 @@ from state import Clause
 SECTION_RE = re.compile(r'^\s*(\d+[א-ת]?)\.?\s+')   # "1.", "1א.", "2 " — ספרה + סיומת-אות אופציונלית
 WINDOW_SIZE = 500
 WINDOW_OVERLAP = 50
-MAX_SECTION_CHARS = 1500        # סעיף ממוספר ארוך מזה — מחלונים אותו (שומר על מספר הסעיף)
 
-# --- טריגרים מפורשים ל-fallback (מעבר ל-TS) ---
-MIN_SECTIONS = 3                # < 3 סעיפים ממוספרים → כנראה ה-split לא זיהה כותרות
-MAX_AVG_CHARS = 1200            # סעיף ממוצע ענק → סימן שה-headers לא זוהו
+# --- ספי החלטה (fallback / windowing) — מרוכזים כאן, מתועדים ב-README ---
+MIN_SECTIONS     = 3      # < 3 סעיפים ממוספרים → split כנראה נכשל → fallback
+MAX_AVG_CHARS    = 2000   # סעיף ממוצע ארוך מזה → headers לא זוהו → fallback (עברית משפטית ארוכה)
+MAX_SINGLE_CHARS = 4000   # סעיף בודד ענק מזה → split נכשל עליו → מחלונים אותו (שומר מספר סעיף)
 
 class ExtractTelemetry(BaseModel):
     path: str                   # "regex" | "mixed" | "fallback" | "empty"
@@ -58,7 +58,8 @@ def _split_sections(text: str) -> list[tuple[str | None, str]]:
     return sections
 
 def extract_clauses(raw_text: str, *, min_sections: int = MIN_SECTIONS,
-                    max_avg_chars: int = MAX_AVG_CHARS) -> tuple[list[Clause], ExtractTelemetry]:
+                    max_avg_chars: int = MAX_AVG_CHARS,
+                    max_single_chars: int = MAX_SINGLE_CHARS) -> tuple[list[Clause], ExtractTelemetry]:
     text = _normalize(raw_text)
     if not text:
         tele = ExtractTelemetry(path="empty", n_clauses=0, avg_len=0.0,
@@ -96,7 +97,7 @@ def extract_clauses(raw_text: str, *, min_sections: int = MIN_SECTIONS,
     else:
         windowed_any = False
         for num, body in sections:
-            if len(body) <= MAX_SECTION_CHARS:
+            if len(body) <= max_single_chars:
                 push(num, body)
             else:
                 windowed_any = True

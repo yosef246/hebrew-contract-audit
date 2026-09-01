@@ -1,10 +1,9 @@
 # graph.py — LangGraph orchestration. Stage C: analyze_node + advance_hub + route_after_advance.
 # correct/validate (D), coherence/report + build_graph (E) follow.
-import functools, json, time, urllib.error
+import datetime, functools, json, os, time, urllib.error
 from langgraph.graph import StateGraph, START, END
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import SystemMessage, HumanMessage
-from pydantic import ValidationError
 from rag_client import Source, _retrieve_law_http   # ה-black box ל-RAG (נבדק בשלב B)
 from state import (GraphState, Clause, AnalyzerVerdict, AnalysisResult,
                    Correction, ValidatorVerdict, Validation,
@@ -23,17 +22,37 @@ def _model() -> ChatAnthropic:
     # thinking מועבר כ-param מפורש (langchain-anthropic 1.7 מזהיר על העברתו דרך model_kwargs).
     return ChatAnthropic(model=CLAUDE_MODEL, thinking={"type": "disabled"})
 
-def _structured(schema, messages, retries: int = 2):
-    """with_structured_output עמיד: Sonnet-5 משמיט לעתים שדה חובה בפלט המובנה (למשל is_problematic)
-    → ValidationError. retry מתקן את ההשמטה החולפת. אחרי שכל הניסיונות נכשלו — מרים את השגיאה."""
-    llm = _model().with_structured_output(schema)
-    last = None
-    for _ in range(retries + 1):
-        try:
-            return llm.invoke(messages)
-        except ValidationError as e:
-            last = e
-    raise last
+TELEMETRY_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "telemetry.jsonl")
+
+def _log_telemetry(rec: dict) -> None:
+    """append-only JSONL — שורה אחת לכל LLM-call (כולל ניסיונות כושלים)."""
+    os.makedirs(os.path.dirname(TELEMETRY_PATH), exist_ok=True)
+    with open(TELEMETRY_PATH, "a", encoding="utf-8") as f:
+        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+def _structured(schema, messages, *, node: str, clause_id: str | None = None,
+                attempts: int | None = None, retries: int = 2):
+    """with_structured_output עמיד + telemetry לכל LLM-call. include_raw=True נותן usage_metadata
+    (input/output tokens) ולא מרים על שדה חובה חסר — הוא מדווח ב-parsing_error, אז ה-retry נקי.
+    כל ניסיון (כולל כושל) נרשם ל-data/telemetry.jsonl."""
+    llm = _model().with_structured_output(schema, include_raw=True)
+    last_err = None
+    for retry_i in range(retries + 1):
+        t0 = time.monotonic()
+        result = llm.invoke(messages)       # {"raw":AIMessage, "parsed":obj|None, "parsing_error":..}
+        usage = getattr(result.get("raw"), "usage_metadata", None) or {}
+        parsed = result.get("parsed")
+        ok = parsed is not None and not result.get("parsing_error")
+        _log_telemetry({
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "node": node, "clause_id": clause_id, "attempts": attempts, "retry_i": retry_i,
+            "input_tokens": usage.get("input_tokens"), "output_tokens": usage.get("output_tokens"),
+            "latency_ms": int((time.monotonic() - t0) * 1000), "ok": ok,
+        })
+        if ok:
+            return parsed
+        last_err = result.get("parsing_error") or ValueError("no parsed output")
+    raise last_err if isinstance(last_err, BaseException) else ValueError(str(last_err))
 
 def _retrieve_with_retries(query: str, k: int = LAW_K):
     for attempt in range(MAX_RETRIEVAL_TRIES):
@@ -80,7 +99,8 @@ def analyze_node(state: GraphState) -> dict:
     user = (f'סעיף {clause.section_number or "ללא מספר"}:\n"""\n{clause.text}\n"""\n\n'
             f"מקורות חוק ממוספרים:\n{_fmt_sources(sources)}")
     verdict: AnalyzerVerdict = _structured(
-        AnalyzerVerdict, [SystemMessage(content=ANALYZER_SYSTEM), HumanMessage(content=user)])
+        AnalyzerVerdict, [SystemMessage(content=ANALYZER_SYSTEM), HumanMessage(content=user)],
+        node="analyze", clause_id=clause.id, attempts=state.attempts.get(clause.id))
     result = AnalysisResult(**verdict.model_dump(), sources=sources)   # מצמידים את המקורות האמיתיים
     state.analysisResults[clause.id] = result
     # C.5: analyze קובע את הסטטוס לסעיפים לא-בעייתיים. חריגה-מנורמות-ללא-מקור → unverified_concern
@@ -126,7 +146,8 @@ def correct_node(state: GraphState) -> dict:
     user = (f"סעיף מקורי:\n{clause.text}\n\nמקורות חוק (השתמש רק בהם):\n"
             f"{_fmt_sources(analysis.sources)}\n\nהבעיה שזוהתה: {analysis.reason}")
     out: Correction = _structured(
-        Correction, [SystemMessage(content=CORRECTOR_SYSTEM), HumanMessage(content=user)])
+        Correction, [SystemMessage(content=CORRECTOR_SYSTEM), HumanMessage(content=user)],
+        node="correct", clause_id=clause.id, attempts=state.attempts.get(clause.id))
     state.proposedCorrections[clause.id] = out
     return {"proposedCorrections": state.proposedCorrections, "attempts": state.attempts}
 
@@ -142,7 +163,8 @@ def validate_node(state: GraphState) -> dict:
             f"מקורות חוק (שלפת עצמאית):\n{_fmt_sources(v_sources)}\n\n"
             f"סעיפים אחרים בחוזה (הקשר):\n" + ("\n---\n".join(others) or "(אין)"))
     verdict: ValidatorVerdict = _structured(
-        ValidatorVerdict, [SystemMessage(content=VALIDATOR_SYSTEM), HumanMessage(content=user)])
+        ValidatorVerdict, [SystemMessage(content=VALIDATOR_SYSTEM), HumanMessage(content=user)],
+        node="validate", clause_id=clause.id, attempts=state.attempts.get(clause.id))
     result = Validation(**verdict.model_dump(), retrieved_sources=v_sources)   # מצמידים audit trail
     state.validationResults.setdefault(clause.id, []).append(result)           # היסטוריית ניסיונות!
     return {"validationResults": state.validationResults}
@@ -167,7 +189,8 @@ def coherence_node(state: GraphState) -> dict:
     listing = "\n\n".join(
         f"סעיף {c.section_number or c.id}: {corr.corrected_text}" for c, corr in corrected)
     out: CoherenceResult = _structured(
-        CoherenceResult, [SystemMessage(content=COHERENCE_SYSTEM), HumanMessage(content=listing)])
+        CoherenceResult, [SystemMessage(content=COHERENCE_SYSTEM), HumanMessage(content=listing)],
+        node="coherence")
     state.coherenceIssues = out
     return {"coherenceIssues": state.coherenceIssues}
 
@@ -203,7 +226,8 @@ def report_node(state: GraphState) -> dict:
     payload = _report_payload(state)
     out: ReportOutput = _structured(
         ReportOutput, [SystemMessage(content=REPORT_SYSTEM),
-                       HumanMessage(content=json.dumps(payload, ensure_ascii=False))])
+                       HumanMessage(content=json.dumps(payload, ensure_ascii=False))],
+        node="report")
     any_hr = any(s == "requires_human_review" for s in state.clauseStatus.values())
     return {"report_markdown": out.markdown,
             "status": "requires_human_review" if any_hr else "done"}
