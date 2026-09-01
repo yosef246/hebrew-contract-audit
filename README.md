@@ -31,8 +31,24 @@ ClauseExtractor (deterministic, pre-graph)
 |---|---|
 | `agents/` | All Python: `state.py`, `rag_client.py`, `prompts.py`, `graph.py`, `extract.py`, tests |
 | `web/` | TypeScript: PDF extractor (`unpdf` + bidi), RAG endpoint, future UI |
-| `fixtures/` | Real contracts + ground-truth annotations |
+| `fixtures/` | Contracts + ground-truth annotations (see Fixtures & Privacy) |
 | `data/` | Sqlite checkpoints + `telemetry.jsonl` (git-ignored) |
+
+## Fixtures & Privacy
+
+Real contracts are **not** included in this repo, for privacy. Real lease contracts carry PII
+(names, addresses, IDs), so both the source files and their extracted text stay out of git:
+
+| Path | Committed? | Why |
+|---|---|---|
+| `fixtures/raw/` (PDF/DOCX) | ❌ git-ignored | source contracts — PII |
+| `fixtures/*.txt` (extracted) | ❌ git-ignored | extracted text — still PII |
+| `fixtures/sample-00.txt` | ✅ committed | placeholder-name sample (no real PII) |
+| `fixtures/annotations/*.json` | ✅ committed | `clauseStatus` per `section_id` only — no clause text |
+
+**To reproduce the eval:** drop your own contracts into `fixtures/raw/`, run the extractor, then
+label them per the schema in `fixtures/annotations/README.md`. The annotations carry judgments
+(section_id → expected clauseStatus), never the contract text — so they are safe to share.
 
 ## Running (dev)
 

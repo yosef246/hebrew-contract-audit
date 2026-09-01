@@ -7,6 +7,11 @@
 data/*
 !data/.gitkeep
 
+# fixtures — real contracts contain PII. Only the synthetic sample + annotations are committed.
+fixtures/raw/
+fixtures/*.txt
+!fixtures/sample-00.txt
+
 # python
 __pycache__/
 *.pyc
