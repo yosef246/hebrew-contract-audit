@@ -14,6 +14,11 @@ class Clause(BaseModel):            # תוצר ClauseExtractor (קוד רגיל,
     section_number: Optional[str]
     text: str
     index: int
+    # granularity: יחידת הניתוח היא תת-סעיף. כותרת ראשית = קונטקסט בלבד (analyze=False),
+    # אלא אם אין תחתיה תת-סעיפים (אז היא עצמאית). ה-parent_heading מוזרק ל-analyze כ-metadata.
+    kind: Literal["preamble", "main_heading", "sub_clause"] = "sub_clause"
+    analyze: bool = True
+    parent_heading: Optional[str] = None
 
 # מה שה-LLM ממלא בניתוח. הוא מחזיר MARKER references (used_markers), לעולם לא Source מלאים —
 # אנחנו מצמידים את המקורות האמיתיים. מראה את דפוס האנטי-הזיה של issue-detection.ts (law_marker
@@ -60,7 +65,7 @@ class NodeTelemetry(BaseModel):
     input: str
     output: str
 
-ClauseStatus = Literal["ok", "unverified_concern", "problematic", "corrected", "requires_human_review", "retrieval_failed"]
+ClauseStatus = Literal["ok", "unverified_concern", "problematic", "corrected", "requires_human_review", "retrieval_failed", "context"]
 
 class GraphState(BaseModel):
     contractId: str

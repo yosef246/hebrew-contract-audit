@@ -117,6 +117,30 @@ def _disambiguate(sections: list[tuple[str | None, str]]) -> list[tuple[str | No
         out.append((new, txt))
     return out
 
+def _main_of(sid: str) -> str:
+    """המספר הראשי מתוך section_id: '6.1.2'→'6', '4.2-א'→'4', '2'→'2'."""
+    return sid.split(".")[0].split("-")[0]
+
+def _classify(chunks: list[Clause]) -> list[Clause]:
+    """granularity: כותרת ראשית = קונטקסט (analyze=False) אם יש תחתיה תת-סעיפים; אחרת עצמאית.
+    תת-סעיף = יחידת ניתוח (analyze=True) עם parent_heading מוזרק. preamble = לא מנותח."""
+    heading_text = {c.section_number: c.text for c in chunks
+                    if c.section_number and "." not in c.section_number}
+    mains_with_subs = {_main_of(c.section_number) for c in chunks
+                       if c.section_number and "." in c.section_number}
+    for c in chunks:
+        sid = c.section_number
+        if sid is None:
+            c.kind, c.analyze, c.parent_heading = "preamble", False, None
+        elif "." not in sid:                              # כותרת ראשית
+            c.kind = "main_heading"
+            c.analyze = sid not in mains_with_subs        # עצמאית רק אם אין תת-סעיפים
+            c.parent_heading = None
+        else:                                             # תת-סעיף
+            c.kind, c.analyze = "sub_clause", True
+            c.parent_heading = heading_text.get(_main_of(sid))
+    return chunks
+
 def extract_clauses(raw_text: str, *, min_sections: int = MIN_SECTIONS,
                     max_avg_chars: int = MAX_AVG_CHARS,
                     max_single_chars: int = MAX_SINGLE_CHARS) -> tuple[list[Clause], ExtractTelemetry]:
@@ -166,6 +190,7 @@ def extract_clauses(raw_text: str, *, min_sections: int = MIN_SECTIONS,
         avg = statistics.mean(len(c.text) for c in chunks) if chunks else 0.0
         print(f"[extract] regex→N={regex_n} | path={path} | avg_len={avg:.0f}", flush=True)
 
+    _classify(chunks)     # granularity: main_heading vs sub_clause + analyze flag + parent_heading
     avg_len = statistics.mean(len(c.text) for c in chunks) if chunks else 0.0
     tele = ExtractTelemetry(path=path, n_clauses=len(chunks), avg_len=round(avg_len, 1),
                             regex_sections=regex_n, fallback_reason=fallback_reason)

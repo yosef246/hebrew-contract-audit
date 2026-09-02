@@ -88,6 +88,9 @@ def _fmt_sources(sources: list[Source]) -> str:
 @node("analyze")
 def analyze_node(state: GraphState) -> dict:
     clause = _current(state)
+    if not clause.analyze:      # כותרת ראשית / preamble — קונטקסט בלבד, לא יחידת ניתוח
+        state.clauseStatus[clause.id] = "context"
+        return {"clauseStatus": state.clauseStatus}
     sources, _fails = _retrieve_with_retries(clause.text)        # retrieve_law (grounding דטרמיניסטי)
     if sources is None:                                          # 3 כשלי שליפה → דלג
         state.clauseStatus[clause.id] = "retrieval_failed"
@@ -96,7 +99,8 @@ def analyze_node(state: GraphState) -> dict:
             reason="retrieval_failed", used_markers=[], sources=[],
             missing_info=["לא נשלפו מקורות חוק"])
         return {"analysisResults": state.analysisResults, "clauseStatus": state.clauseStatus}
-    user = (f'סעיף {clause.section_number or "ללא מספר"}:\n"""\n{clause.text}\n"""\n\n'
+    ctx = f' (תחת כותרת: "{clause.parent_heading}")' if clause.parent_heading else ""
+    user = (f'סעיף {clause.section_number or "ללא מספר"}{ctx}:\n"""\n{clause.text}\n"""\n\n'
             f"מקורות חוק ממוספרים:\n{_fmt_sources(sources)}")
     verdict: AnalyzerVerdict = _structured(
         AnalyzerVerdict, [SystemMessage(content=ANALYZER_SYSTEM), HumanMessage(content=user)],
@@ -113,10 +117,10 @@ def analyze_node(state: GraphState) -> dict:
     return {"analysisResults": state.analysisResults, "clauseStatus": state.clauseStatus}
 
 def route_after_analyze(state: GraphState) -> str:
-    a = state.analysisResults[_current(state).id]
-    if a.is_problematic:
+    a = state.analysisResults.get(_current(state).id)   # .get: כותרות קונטקסט אין להן analysisResult
+    if a and a.is_problematic:
         return "correct"                       # יש מקור תומך → לתיקון
-    # ok / unverified_concern / retrieval_failed → אין מה לתקן בלי בסיס משפטי → advance
+    # ok / unverified_concern / retrieval_failed / context → אין מה לתקן → advance
     return "advance"
 
 @node("advance")
@@ -124,8 +128,8 @@ def advance_hub(state: GraphState) -> dict:
     clause = _current(state)
     vlist = state.validationResults.get(clause.id, [])
     st = state.clauseStatus.get(clause.id)
-    # analyze כבר קבע ok / unverified_concern / retrieval_failed — לא לדרוס. כאן נסגר רק המסלול הבעייתי.
-    if st not in ("ok", "unverified_concern", "retrieval_failed"):
+    # analyze כבר קבע ok / unverified_concern / retrieval_failed / context — לא לדרוס. כאן נסגר רק המסלול הבעייתי.
+    if st not in ("ok", "unverified_concern", "retrieval_failed", "context"):
         if vlist and vlist[-1].valid:                               # שלב D: תיקון שאושר
             state.clauseStatus[clause.id] = "corrected"
         elif state.attempts.get(clause.id, 0) >= MAX_RETRIES:       # שלב D: מוצו retries
@@ -198,6 +202,8 @@ def _report_payload(state: GraphState) -> dict:
     """דוחס את ה-state לשדות שהדוח צריך — כולל resolve של used_markers → תוויות מקור לציטוט."""
     clauses = []
     for c in state.clauses:
+        if not c.analyze:      # כותרות קונטקסט / preamble — לא נכנסות לדוח הממצאים
+            continue
         a = state.analysisResults.get(c.id)
         corr = state.proposedCorrections.get(c.id)
         vlist = state.validationResults.get(c.id, [])
