@@ -34,16 +34,17 @@ def test_single_char_window_mixed():
     assert t.path == "mixed", t.path
     assert any(len(c.text) <= WINDOW_SIZE for c in clauses)   # קיימות פיסות מחולנות
 
-def test_subsection_absorbed():
+def test_subsection_handling():
     doc = "1. הגדרות.\n1.א תת סעיף ראשון.\n1.1 תת סעיף שני.\n2. שני.\n3. שלישי."
     clauses, t = extract_clauses(doc)
     sec1 = next(c for c in clauses if c.section_number == "1")
-    assert "1.א" in sec1.text and "1.1" in sec1.text   # תת-סעיפים נבלעים לתוך ההורה
-    assert t.regex_sections == 3
+    assert "1.א" in sec1.text                               # letter-suffix sub נבלע להורה
+    assert any(c.section_number == "1.1" for c in clauses)   # N.N נתפס כסעיף עצמאי (SECTION_RE היררכי)
+    assert t.regex_sections == 4                             # 1, 1.1, 2, 3
 
 if __name__ == "__main__":
     tests = [test_regex_clean, test_count_fallback, test_avg_fallback,
-             test_single_char_window_mixed, test_subsection_absorbed]
+             test_single_char_window_mixed, test_subsection_handling]
     for fn in tests:
         fn()
         print(f"PASS  {fn.__name__}")
