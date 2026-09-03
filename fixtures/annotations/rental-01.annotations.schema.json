@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LeaseLens contract annotations",
+  "description": "Human ground-truth labels for one contract. section_id -> expected clauseStatus. No clause text / PII.",
+  "type": "object",
+  "required": ["contract", "annotations"],
+  "properties": {
+    "contract": { "type": "string" },
+    "schema": { "type": "string" },
+    "source": { "type": "string" },
+    "extractor": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string", "enum": ["regex", "mixed", "fallback"] },
+        "analysis_units": { "type": "integer" }
+      }
+    },
+    "note": { "type": "string" },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["clause_id", "expected_status", "notes", "annotated_by", "annotated_at"],
+        "properties": {
+          "clause_id": {
+            "type": "string",
+            "description": "sub-clause section_number from the extractor, e.g. '1.1', '4.2-א'"
+          },
+          "expected_status": {
+            "type": ["string", "null"],
+            "enum": [null, "ok", "corrected", "unverified_concern", "requires_human_review"],
+            "description": "human ground truth. null = not yet annotated."
+          },
+          "notes": {
+            "type": ["string", "null"],
+            "description": "short rationale WITHOUT clause text, e.g. 'חילוט מוגזם'. null = none."
+          },
+          "annotated_by": { "type": ["string", "null"] },
+          "annotated_at": { "type": ["string", "null"], "description": "ISO date" }
+        }
+      }
+    }
+  }
+}

@@ -58,8 +58,9 @@ label them per the schema in `fixtures/annotations/README.md`. The annotations c
 # 2. env: RAG_INTERNAL_TOKEN (matches web), ANTHROPIC_API_KEY
 export RAG_INTERNAL_TOKEN=... ANTHROPIC_API_KEY=...
 cd agents
-python test_f_graph.py     # end-to-end graph + Sqlite persistence + resume
-python test_extract.py     # ClauseExtractor edge cases
+python test_f_graph.py            # end-to-end graph + Sqlite persistence + resume
+python test_extract_branches.py   # ClauseExtractor branch tests
+python tests/test_normalize.py    # RTL normalize + size/preamble/monotonicity barriers
 ```
 
 ## Extractor thresholds (`agents/extract.py`)
@@ -72,6 +73,17 @@ Fallback (whole-doc windowing) triggers when the numbered-section split looks un
 | `MAX_AVG_CHARS` | 2000 | Average section longer than this → headers not detected → fallback |
 | `MAX_SINGLE_CHARS` | 4000 | A single section this large → split failed on it → window it |
 
+## Known Limitations
+
+- **DOCX auto-numbering not supported** — `python-docx` omits Word list numbers (they live in
+  `numbering.xml`, not the paragraph text), so numbered DOCX contracts extract to 0 sections.
+  Full support (reconstruct numbering) is deferred to post-F / deploy-prep; DOCX fixtures are
+  excluded from the eval until then.
+- **Analyzer non-determinism (Sonnet-5)** — the ungrounded-concern flag flips across runs;
+  self-consistency is applied in the eval harness only, never production.
+- **Coherence LLM-path not yet exercised live** — short-circuits below 2 corrected clauses;
+  needs a dedicated ground-truth case.
+
 ## Known issues (tracked; feed the eval)
 
 1. **`AnalyzerVerdict.norm_deviation_without_source` is non-deterministic on Sonnet-5** — same
@@ -82,9 +94,9 @@ Fallback (whole-doc windowing) triggers when the numbered-section split looks un
    fixture, not a standalone prompt-coupled test.
 3. **Structured-output field omission** — Sonnet-5 occasionally drops a required field
    (e.g. `is_problematic`). Guarded by `_structured()` retry (2×).
-4. **Extractor granularity** — sub-sections (`1.א`, `1.1`) are absorbed into the parent numbered
-   clause; letter-only numbering (`א.`, `ב.`) falls back (structure lost). Decide desired
-   granularity when building the fixture.
+4. **Extractor granularity (resolved)** — hierarchical `N.N` sub-sections are captured as their own
+   analysis units (with the parent heading injected as context); letter-suffix sub-clauses (`1.א`)
+   stay absorbed in the parent. Letter-only top numbering (`א.`, `ב.`) still falls back.
 
 ## Production readiness (deploy prep — NOT now)
 

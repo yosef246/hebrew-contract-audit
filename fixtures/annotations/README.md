@@ -1,36 +1,56 @@
-# Annotations — ground-truth schema
+# Annotations — human ground truth
 
-Human labels for the eval harness. **No contract text or PII** — only judgments keyed by
-`section_id`, so these files are safe to commit and share.
+Labels for the eval harness. **No contract text or PII** — only judgments keyed by `clause_id`,
+so these files are safe to commit and share. One JSON per contract + a matching schema.
 
-One JSON per contract: `fixtures/annotations/<contract>.json` (e.g. `rental-01.json`).
+> **These are HUMAN ground truth, not LLM output.** A person (Yosef / reviewer) fills them by hand.
+> Never auto-fill `expected_status` with a model — the whole point is an independent yardstick to
+> measure the pipeline against. The git commit that fills a file *is* the record of who/when.
 
-## Schema
+## Files
+
+- `rental-01.annotations.schema.json` — JSON Schema for the annotation file.
+- `rental-01.annotations.json` — skeleton: 43 analysis-unit IDs (the sub-clauses), all `null`.
+
+## Entry format
 
 ```json
 {
-  "contract": "rental-01",
-  "extractor": { "path": "regex", "n_clauses": 14 },
-  "clauses": [
-    { "section_id": "1", "expected_status": "problematic",
-      "expected_law": "חוק השכירות §25י", "note": "חילוט גורף" },
-    { "section_id": "2", "expected_status": "ok" },
-    { "section_id": "7", "expected_status": "unverified_concern" }
-  ]
+  "clause_id": "4.2-א",
+  "expected_status": null,     // ← fill by hand
+  "notes": null,               // short rationale, NO clause text (e.g. "חילוט מוגזם")
+  "annotated_by": null,        // "yosef"
+  "annotated_at": null         // ISO date, e.g. "2026-09-10"
 }
 ```
 
-- `section_id` — the clause's `section_number` from the extractor (or its `id` for un-numbered).
-- `expected_status` — one of: `ok` · `unverified_concern` · `problematic` · `corrected` ·
-  `requires_human_review` · `retrieval_failed` (matches `state.ClauseStatus`).
-- `expected_law` *(optional)* — the grounding source a correct analysis should cite.
-- `note` *(optional)* — short rationale. Keep it generic; **never paste clause text**.
+`clause_id` = the sub-clause `section_number` from the extractor (analysis units only — main
+headings are context, not annotated).
+
+## When to use each status
+
+Match `state.ClauseStatus`. For annotation, use these four:
+
+| `expected_status` | Use when the clause… |
+|---|---|
+| `ok` | is fine — nothing to fix, no concern. |
+| `corrected` | is problematic **and** the law corpus supports flagging it → a grounded fix is expected. |
+| `unverified_concern` | reads as deviating from norms **but** no corpus source grounds it → surface, don't assert. |
+| `requires_human_review` | genuinely needs a lawyer's eye (ambiguous, out of the corpus's reach). |
+
+Leave `null` until decided. `notes`: one short phrase, **never** paste the clause text.
+
+## How to fill
+
+1. Open `rental-01.annotations.json`.
+2. For each `clause_id`, read the clause in the source PDF (local, git-ignored) and set
+   `expected_status`, `notes`, `annotated_by`, `annotated_at`.
+3. `git commit` — that commit is the provenance record.
 
 ## What the eval measures (later)
 
 - precision / recall per `expected_status`.
-- agreement rate on similar clauses (catches the Analyzer non-determinism — see main README
-  Known issues #1).
-- whether the corpus governs the outcome via `regex` vs `fallback` extraction path.
+- agreement rate on similar clauses (catches the Analyzer non-determinism — main README).
+- whether `regex` vs `fallback` extraction path governs the outcome.
 
-**Not yet populated** — annotation waits for approval on which contracts to label.
+**Status:** `rental-01` skeleton generated (43 IDs, all `null`). Awaiting human annotation.
