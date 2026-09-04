@@ -6,308 +6,312 @@
     "path": "regex",
     "analysis_units": 43
   },
-  "note": "ground truth אנושי — למלא ידנית. אל תמלא ב-LLM.",
+  "note": "ground truth אנושי — למלא ידנית. אל תמלא ב-LLM. מ-rental-02 ואילך.",
+  "provenance": {
+    "status": "gervis-draft (LLM-generated), yosef-batch-approved without independent per-clause review",
+    "note": "rental-01 is a LeaseLink template. Emits an unscored flag rate only; no ground truth labels. Real ground truth begins with rental-02."
+  },
   "annotations": [
     {
       "clause_id": "1.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "הצהרת בעלות סטנדרטית",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "1.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "מסירה ריקה — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "1.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "הצהרת תמ״א 38 — חובת גילוי חוקית, מגן על שוכר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "1.4",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "AS-IS + רישום פגמים בכתב — הוגן",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "2.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "שימוש למגורים — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "3.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "תקופה משתנה (template)",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "4.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "סכום שכ״ד משתנה (template)",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "4.2-א",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "העברה בנקאית — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "4.2-ב",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "עד 12 המחאות + הוראה שרק פירעון = תשלום. סטנדרטי בישראל",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "4.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "חובת תשלום גם ללא שימוש — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "5.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "ללא אופציה — הוגן",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "6.1.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "תשלומים שוטפים על שוכר — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "6.1.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "30 יום להעברת חשבונות + אסמכתא — סביר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "6.1.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "התראה 14 יום + pay-and-charge — הוגן",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "6.2.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "מיסי בעלות על משכיר — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "6.2.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "חיובי ועד חריגים על משכיר — טוב לשוכר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "7.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "שמירה על מצב + בלאי סביר — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "7.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "תיקון תוך 30 יום — סביר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "7.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "תיקון דחוף תוך 3 ימים — מגן על שוכר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "7.4",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "שוכר משלם על שימוש רשלני — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "7.5",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "תיקון תכולה על משכיר — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "8.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "שינויים בדירה — דרוש אישור בכתב, סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "8.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "שיקול דעת משכיר לגבי שינויים לא-מאושרים — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "9.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "ביטוח מבנה על משכיר + ויתור על תחלוף כלפי שוכר — מגן על שוכר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "10.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "זכות שכירות אישית — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "10.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "העברה בהסכמה + שוכר חלופי — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "11.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "החזרת דירה במצב + בלאי סביר — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "11.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "פיצוי 1.5× ליום איחור בפינוי — סביר",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "12.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "חוק החוזים תרופות חל — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "12.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "כותרת הפרות יסודיות — פסקה מקדימה",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "12.2.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "7 ימי איחור = הפרה יסודית — קצר אבל חוקי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "12.2.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "אי-פינוי = הפרה יסודית — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "12.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "7 ימים לתיקון הפרה אחרי התראה — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "13.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "בטחונות כמוסכם + מפורש 'לא יעלה על המותר בדין' — סעיף טוב",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "14.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "אי-תחולת הגנת הדייר (דירה פנויה) — boilerplate חוקי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "14.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "אין דמי מפתח — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "14.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "השקעות לא יוצרות זכויות הגנה — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.1",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "משכיר יכול למכור זכויות בכפוף לשמירת זכויות השוכר — סעיף מגן",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.2",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "חובות לא ניתנים לקיזוז אלא בהסכמה — עלול להיחשב תנאי מקפח לפי חוק החוזים האחידים. מומלץ ייעוץ משפטי. — gervis-draft flag; not human-verified",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.3",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "כניסת משכיר בתיאום מראש + תדירות סבירה — הוגן",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.4",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "סעיף כוללניות — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.5",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "אי-ויתור ע״י אי-שימוש — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     },
     {
       "clause_id": "15.6",
       "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "notes": "כותרות לנוחות בלבד — סטנדרטי",
+      "annotated_by": "gervis-draft",
+      "annotated_at": "2026-09-03"
     }
   ]
 }

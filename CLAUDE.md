@@ -18,6 +18,26 @@ the preamble. One rule isn't enough — `extract.py` layers three barriers: size
 (section-id = 1–2 digits/level), preamble boundary (strip everything before the real `1.`), and a
 monotonicity validator (main IDs must ascend). Each catches what the others miss.
 
+### Advisor drafts are not ground truth
+
+The rental-01 annotation cycle burned three review rounds because a plausible LLM-drafted judgment
+("15.2 is borderline") was rubber-stamped into the fixture as if a human had verified it.
+gervis-reviewer caught this three times before the file matched reality. Rule going forward:
+`annotated_by: "yosef"` is a declaration that a human read the clause text and independently
+decided. It cannot be inferred from advisor context or batch approval. If in doubt, use
+`gervis-draft` + null status.
+
+### Single source of truth for fixture metadata
+
+Four consecutive REVISE rounds on rental-01 caught the same fact duplicated in README (3 places)
+and JSON (1 place). Duplicated provenance text drifts under edits.
+
+**Rule going forward:** Fixture metadata (purpose, provenance, metrics emitted, ground truth
+status) lives ONLY in the JSON provenance block. README should reference it, not duplicate.
+
+TODO (post-F): Refactor README to link to JSON provenance sections via section anchors instead of
+restating.
+
 ## Known Issues
 
 - **DOCX support** — `python-docx` returns paragraph text **without list numbers** (Word
