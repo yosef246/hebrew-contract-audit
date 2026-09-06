@@ -32,11 +32,33 @@ decided. It cannot be inferred from advisor context or batch approval. If in dou
 Four consecutive REVISE rounds on rental-01 caught the same fact duplicated in README (3 places)
 and JSON (1 place). Duplicated provenance text drifts under edits.
 
-**Rule going forward:** Fixture metadata (purpose, provenance, metrics emitted, ground truth
-status) lives ONLY in the JSON provenance block. README should reference it, not duplicate.
+**Rule going forward:** The JSON provenance block is the single source of truth (SSOT) for
+fixture metadata. README prose about fixture properties (purpose, metric name, provenance,
+ground truth status) is permitted only if guarded by automated invariant checks that fail CI
+when README and JSON disagree.
 
-TODO (post-F): Refactor README to link to JSON provenance sections via section anchors instead of
-restating.
+#### Post-F refactor options (choose one when F.6 harness lands)
+
+**Option A — Named invariants (recommended):** Add explicit literal checks to the eval harness
+that fail if any of these break:
+
+Requires first adding `provenance.metrics` and per-fixture `purpose` / `metric_emitted` keys to
+each annotations JSON; these do not exist yet.
+
+- Invariant 1: The string `false-positive rate` appears in README only in the two sanctioned
+  lines within the `### rental-01 (baseline)` subsection (upgrade-path and do-not-call-it lines).
+- Invariant 2: The metric name in README's rental-01 subsection (currently `rental-01.flag_rate`)
+  matches a metric key in the JSON `provenance.metrics` field.
+- Invariant 3: Each fixture's `Purpose` and `Metric emitted` bullets in README must have
+  corresponding non-empty fields in the fixture's JSON provenance block.
+
+Add invariants as new claims accrue. Each is a literal test, not semantic comparison.
+
+**Option B — Delete redundancy:**
+Strip fixture metadata prose from README entirely. Point readers to the JSON provenance block as
+the authoritative source. Trade: less skimmable README, but zero drift risk.
+
+Both are cheap. A is more forgiving; B is more disciplined.
 
 ## Known Issues
 
