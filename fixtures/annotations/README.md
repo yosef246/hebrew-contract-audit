@@ -14,10 +14,12 @@ for every future annotation.
 
 ## Files
 
-- `rental-01.annotations.schema.json` — JSON Schema for the annotation file.
+- `annotations.schema.json` — JSON Schema shared by every annotation file.
 - `rental-01.annotations.json` — rental-01: baseline-only fixture (all 43 clauses
   gervis-draft, no human-verified labels). Emits an unscored flag rate only — a clean
   LeaseLink template the system should ideally not flag. See Fixture roles below.
+- `rental-02.annotations.json` — rental-02: skeleton, 37 analysis units, all labels
+  `null`. Awaiting human per-clause annotation. See Fixture roles below.
 
 ## Entry format
 

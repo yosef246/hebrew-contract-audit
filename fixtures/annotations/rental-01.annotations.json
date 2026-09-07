@@ -1,6 +1,6 @@
 {
   "contract": "rental-01",
-  "schema": "rental-01.annotations.schema.json",
+  "schema": "annotations.schema.json",
   "source": "fixtures/raw/rental-01.pdf (git-ignored, PII)",
   "extractor": {
     "path": "regex",
