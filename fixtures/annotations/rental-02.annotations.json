@@ -1,0 +1,275 @@
+{
+  "contract": "rental-02",
+  "schema": "rental-01.annotations.schema.json",
+  "source": "fixtures/raw/rental-02.pdf (git-ignored, PII)",
+  "extractor": {
+    "path": "regex",
+    "analysis_units": 37
+  },
+  "note": "ground truth אנושי — למלא ידנית. אל תמלא ב-LLM.",
+  "provenance": {
+    "status": "skeleton — no labels yet. Awaiting human per-clause annotation by yosef.",
+    "note": "rental-02 is an UNSIGNED Hebrew lease template (`חוזה שכירות דוגמא`); party names, IDs, dates and amounts are placeholder runs. Yosef's ruling: that is acceptable — the annotation judges clause content, not who signed. It is the first fixture to receive human labels. Caveats for the annotator: (1) the source numbers two consecutive clauses '6.2' (rental-02.txt lines 61-62), disambiguated positionally by document order into 6.2-1 and 6.2-2 — those suffixes are content-independent, so any future normalize/chunking change could swap them and silently re-point labels; re-verify the pair if the extractor changes. (2) 6.2-1's body is a stub ('payments as follows:'); the breakdown is absent from the extracted text, cause unconfirmed. (3) Clauses whose operative value is a placeholder (e.g. 6.1, rent = ₪_______) may be unjudgeable on their numbers — leave those null rather than guessing."
+  },
+  "annotations": [
+    {
+      "clause_id": "1.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "3.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "3.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "4.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "4.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "5.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "5.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "5.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "6.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "6.2-1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "6.2-2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "7.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "7.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "7.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "8.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "8.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "8.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "8.4",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "9.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "9.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "9.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "9.4",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "10.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "11.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "11.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "11.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "11.4",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "12.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "12.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "13.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "13.2",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "13.3",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "13.4",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "14.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "15.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    },
+    {
+      "clause_id": "16.1",
+      "expected_status": null,
+      "notes": null,
+      "annotated_by": null,
+      "annotated_at": null
+    }
+  ]
+}

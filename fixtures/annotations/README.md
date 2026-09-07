@@ -91,6 +91,9 @@ Leave `null` until decided. `notes`: one short phrase, **never** paste the claus
 
 ### rental-02 and rental-03
 
-- **rental-02** (real signed contract): true ground truth, human-verified per-clause labels. This
-  is where meaningful precision/recall comes from.
+- **rental-02** (unsigned Hebrew lease template; parties, dates and amounts are
+  placeholders): the first fixture to carry human-verified per-clause labels. Ruling on
+  record: an unsigned template is acceptable because the annotation judges clause
+  content, not who signed. Clauses whose operative value is a placeholder may be
+  unjudgeable — those stay `null`.
 - **rental-03** (DOCX): deferred to post-F.
