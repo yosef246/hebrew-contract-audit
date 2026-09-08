@@ -60,6 +60,25 @@ the authoritative source. Trade: less skimmable README, but zero drift risk.
 
 Both are cheap. A is more forgiving; B is more disciplined.
 
+### Empty form fields are NULL, not content
+
+The fixtures are unsigned templates: names, dates and amounts are `____` runs. Yosef's ruling is
+that this is fine, because the audit judges the legal clauses, not the values filled into them.
+
+**The rule is semantic, not textual.** The `____` stays in the clause text exactly as extracted —
+it is already the clearest marker of an unfilled field. Stripping it was tried and reverted: the
+deletion produced broken Hebrew (`תקופת השכירות הנה למשך חודשים בלבד, החל מיום וכלה ביום`), which
+reads to a model as a malformed sentence rather than as a form with an empty slot. What the rule
+forbids is *interpreting* a blank: never treat it as a value, never flag it as a defect.
+
+Consequence for annotation: a clause is judged on its **mechanism**, not its numbers. `12.2` in
+rental-02 is annotatable on "agreed daily compensation with no proof of damage required" even
+though the rate is blank. Do not mark a clause `null` merely because a value was left empty.
+
+**Not enforced in code yet.** No extractor or prompt states this; the natural home is the analyzer
+prompt in `agents/prompts.py`, which is a separate unit needing Yosef's sign-off before it is
+touched.
+
 ## Known Issues
 
 - **DOCX support** — `python-docx` returns paragraph text **without list numbers** (Word
