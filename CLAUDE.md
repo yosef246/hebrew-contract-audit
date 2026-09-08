@@ -84,7 +84,9 @@ clause. `12.2` must still be judgeable on "agreed daily compensation, no proof o
 Not yet measured live: no analyzer run has confirmed the behaviour either way (`ANTHROPIC_API_KEY`
 and `RAG_INTERNAL_TOKEN` are not set in the dev shell). Eight units carry blanks — rental-01 3.1,
 4.1, 4.2-א, 13.1 and rental-02 2, 6.1, 12.2, 16.1 — and `agents/diag_placeholder.py` is the probe
-over them (never executed; see its docstring).
+over them. Its full path is exercised offline by `agents/tests/test_diag_placeholder_offline.py`
+(RAG and LLM stubbed), but it has never run against the live API, so rule 9's effect is still
+unmeasured.
 
 ## Known Issues
 

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """diag_placeholder — מדידת בסיס: איך ה-analyzer מתייחס לשדה ריק ('____')?
 
-NEVER EXECUTED. Written before credentials existed, deliberately: a before/after probe
-authored after the answer is known is worthless. Nothing here has been confirmed to run.
-Not wired into any test suite — __main__-gated only, and never imported by the graph.
+NEVER RUN AGAINST THE LIVE API. Written before credentials existed, deliberately: a
+before/after probe authored after the answer is known is worthless. Its full path IS
+exercised offline by tests/test_diag_placeholder_offline.py, which stubs RAG and the LLM —
+that is what the numbers below have been checked against, never a real analyzer verdict.
+__main__-gated; never imported by the graph.
 
 מריץ את analyze_node על שמונת הסעיפים נושאי-ה-'____' בלבד (לא eval מלא).
 שני כיווני-כשל שמחפשים:
@@ -30,6 +32,9 @@ def main() -> int:
         if not os.environ.get(var):
             print(f"MISSING ENV: {var}")
             return 2
+    # חייבים להישאר בתוך main(): rag_client קורא os.environ["RAG_INTERNAL_TOKEN"] ברמת המודול
+    # (fail-fast), כך שייבוא graph בלי טוקן זורק KeyError. שער ה-env שלמעלה חייב לרוץ קודם.
+    # אל תיתן ל-isort/E402 להרים אותם למעלה — זה שובר את השער בשקט.
     from extract import extract_clauses
     from state import GraphState
     from graph import analyze_node
