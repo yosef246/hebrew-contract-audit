@@ -75,9 +75,16 @@ Consequence for annotation: a clause is judged on its **mechanism**, not its num
 rental-02 is annotatable on "agreed daily compensation with no proof of damage required" even
 though the rate is blank. Do not mark a clause `null` merely because a value was left empty.
 
-**Not enforced in code yet.** No extractor or prompt states this; the natural home is the analyzer
-prompt in `agents/prompts.py`, which is a separate unit needing Yosef's sign-off before it is
-touched.
+**Enforced in `ANALYZER_SYSTEM` rule 9** (`agents/prompts.py`). Without it, rule 5 routes a blank
+into `missing_info` and rule 8 can set `norm_deviation_without_source`, which `graph.py` converts
+straight to `unverified_concern` — so blanks would inflate the flag rate on their own. Rule 9 is
+deliberately narrow: it forbids flagging a clause *because* a field is empty, not flagging the
+clause. `12.2` must still be judgeable on "agreed daily compensation, no proof of damage".
+
+Not yet measured live: no analyzer run has confirmed the behaviour either way (`ANTHROPIC_API_KEY`
+and `RAG_INTERNAL_TOKEN` are not set in the dev shell). Eight units carry blanks — rental-01 3.1,
+4.1, 4.2-א, 13.1 and rental-02 2, 6.1, 12.2, 16.1 — and `agents/diag_placeholder.py` is the probe
+over them (never executed; see its docstring).
 
 ## Known Issues
 
