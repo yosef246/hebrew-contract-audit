@@ -25,7 +25,7 @@ from state import AnalyzerVerdict, Source
 
 CALLS: list[tuple[str, str | None]] = []
 
-EXPECTED_UNITS = 8      # ראה CLAUDE.md, "Empty form fields are NULL, not content"
+EXPECTED_UNITS = 5      # ראה CLAUDE.md, "Empty form fields are NULL, not content"
 
 def _blank_bearing_units() -> dict[str, list[str]]:
     """אמת-קרקע עצמאית מה-fixtures: אילו יחידות-ניתוח באמת נושאות רצף '____'.

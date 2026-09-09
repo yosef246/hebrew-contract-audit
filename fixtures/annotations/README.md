@@ -93,10 +93,10 @@ Leave `null` until decided. `notes`: one short phrase, **never** paste the claus
 
 ### rental-02 and rental-03
 
-- **rental-02** (unsigned Hebrew lease template; parties, dates and amounts are
-  placeholders): the first fixture to carry human-verified per-clause labels. Ruling on
-  record: an unsigned template is acceptable because the annotation judges clause
-  content, not who signed. An empty field (`____`) stays in the text but counts as
-  NULL, never as a value and never as a defect — so every unit is judged on its
-  legal mechanism and all 37 are annotatable.
+- **rental-02** (Hebrew lease template, hand-populated 2026-09-09): the first fixture to
+  carry human-verified per-clause labels. Term, dates, rent and the late-vacate rate hold
+  real values, so clauses are judged on their actual terms rather than on mechanism
+  alone. Still a filled template, not a signed lease. Where an empty field (`____`)
+  remains it counts as NULL — never a value, never a defect. All 37 units are
+  annotatable.
 - **rental-03** (DOCX): deferred to post-F.

@@ -7,7 +7,7 @@ exercised offline by tests/test_diag_placeholder_offline.py, which stubs RAG and
 that is what the numbers below have been checked against, never a real analyzer verdict.
 __main__-gated; never imported by the graph.
 
-מריץ את analyze_node על שמונת הסעיפים נושאי-ה-'____' בלבד (לא eval מלא).
+מריץ את analyze_node על חמשת הסעיפים נושאי-ה-'____' בלבד (לא eval מלא).
 שני כיווני-כשל שמחפשים:
   A. סימון הסעיף כפגום/חריג *בגלל* שהשדה ריק  → מנפח flag_rate
   B. התייחסות ל-'₪_______' כאילו יש בו סכום    → ממצא מומצא
@@ -21,10 +21,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
-# שמונת יחידות-הניתוח שנושאות רצף '____' (ראה CLAUDE.md, "Empty form fields are NULL")
+# חמש יחידות-הניתוח שנושאות רצף '____' (ראה CLAUDE.md, "Empty form fields are NULL").
+# ארבע הראשונות הן המקרים המהותיים — שכ"ד, בטחונות, פרטי בנק, תקופה — שם שדה ריק
+# עלול להיקרא כפגם או להיות מומצא לערך. rental-02 16.1 הוא בקרה שפירה: שורות חתימה,
+# שם ריקוּת היא הנורמה, כך שסימון שלו הוא אות נקי לכיוון A.
 TARGETS = {
     "rental-01": ["3.1", "4.1", "4.2-א", "13.1"],
-    "rental-02": ["2", "6.1", "12.2", "16.1"],
+    "rental-02": ["16.1"],          # השאר מולאו ידנית 2026-09-09
 }
 
 def main() -> int:

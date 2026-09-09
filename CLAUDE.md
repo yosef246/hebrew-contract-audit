@@ -82,11 +82,16 @@ deliberately narrow: it forbids flagging a clause *because* a field is empty, no
 clause. `12.2` must still be judgeable on "agreed daily compensation, no proof of damage".
 
 Not yet measured live: no analyzer run has confirmed the behaviour either way (`ANTHROPIC_API_KEY`
-and `RAG_INTERNAL_TOKEN` are not set in the dev shell). Eight units carry blanks — rental-01 3.1,
-4.1, 4.2-א, 13.1 and rental-02 2, 6.1, 12.2, 16.1 — and `agents/diag_placeholder.py` is the probe
-over them. Its full path is exercised offline by `agents/tests/test_diag_placeholder_offline.py`
-(RAG and LLM stubbed), but it has never run against the live API, so rule 9's effect is still
-unmeasured.
+and `RAG_INTERNAL_TOKEN` are not set in the dev shell). Five units carry blanks — rental-01 3.1,
+4.1, 4.2-א, 13.1 and rental-02 16.1 — and `agents/diag_placeholder.py` is the probe over them. Its
+full path is exercised offline by `agents/tests/test_diag_placeholder_offline.py` (RAG and LLM
+stubbed), but it has never run against the live API, so rule 9's effect is still unmeasured.
+
+It was eight until 2026-09-09, when Yosef hand-populated rental-02: term, dates, rent and the
+late-vacate rate now hold real values, so 2, 6.1 and 12.2 no longer carry blanks. Clause boundaries
+did not move — 37 analysis units with identical ids — so the annotation keys survived. The drift
+guard in the offline test caught the change by failing rather than letting the constants rot, which
+is the whole reason it derives ground truth from the fixtures instead of from `TARGETS`.
 
 ## Known Issues
 
