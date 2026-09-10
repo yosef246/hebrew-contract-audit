@@ -51,14 +51,26 @@ Leave `null` until decided. `notes`: one short phrase, **never** paste the claus
 
 ## How to fill
 
-1. Create `fixtures/annotations/rental-02.annotations.json` (skeleton file — `extract_clauses`
-   output for rental-02, all statuses `null`). This is where human ground truth begins.
+Use the worksheet round-trip — the annotation JSON deliberately holds no clause text, so
+labelling straight into it means flipping between two files.
 
-   Note: `rental-01.annotations.json` is closed as LLM-drafted baseline (see Provenance model
-   below). Do not modify — future contracts start at rental-02.
-2. For each `clause_id`, read the clause in the source PDF (local, git-ignored) and set
-   `expected_status`, `notes`, `annotated_by`, `annotated_at`.
-3. `git commit` — that commit is the provenance record.
+```
+python agents/make_worksheet.py            # -> data/<contract>.worksheet.md  (gitignored)
+# fill STATUS: and NOTES: in each block
+python agents/parse_worksheet.py           # dry run: validates, reports, writes nothing
+python agents/parse_worksheet.py --write   # applies to the annotation JSON
+```
+
+- The worksheet pairs every `clause_id` with its clause text and carries the annotator caveats
+  inline. It is regenerated from the JSON, so labels already saved are seeded back in and
+  regenerating never loses committed work.
+- `make_worksheet.py` refuses to overwrite a worksheet holding fills the JSON does not have.
+  Run `parse_worksheet.py --write` first, or pass `--force` to discard them.
+- A blank `STATUS:` means *not yet decided*, never *decided null*. Those rows are left untouched
+  and the unfilled count is printed.
+- `parse_worksheet.py` refuses to write if any note repeats five or more consecutive words from
+  the contract. This file is pushed; the contract text is not.
+
 
 ## What the eval measures (later)
 
@@ -67,7 +79,8 @@ Leave `null` until decided. `notes`: one short phrase, **never** paste the claus
 - whether `regex` vs `fallback` extraction path governs the outcome.
 
 **Status:** `rental-01`: closed as gervis-draft baseline.
-`rental-02`: awaiting human annotation (this is where ground truth begins).
+`rental-02`: human annotation in progress — 8 of 37 labelled, all `ok` so far.
+The labelled subset detects false positives only; see the fixture's `provenance.status`.
 `rental-03`: post-F (DOCX support pending).
 
 ## Provenance model

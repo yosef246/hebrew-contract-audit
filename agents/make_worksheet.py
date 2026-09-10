@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """make_worksheet — build the annotation worksheet: clause_id + clause text + fill-in lines.
 Lives under data/ (gitignored) because it contains contract text."""
-import io, os, sys, json
-import io, os, sys
+import io, os, re, sys, json
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
@@ -21,6 +20,12 @@ CAV = {
     "6.2-2": "החוזה ממספר שני סעיפים '6.2'. הפיצול לפי מיקום במסמך, לא לפי תוכן.",
     "16.1":  "יחידה ממוזגת: סעיף הכתובות + בלוק החתימה. עגן את התווית על סעיף הכתובות.",
 }
+
+# זרעים מהתוויות שכבר ב-JSON: ייצור מחדש לעולם לא מאבד עבודה שנשמרה.
+SEED = {r["clause_id"]: (r["expected_status"], r["notes"])
+        for r in json.load(io.open("fixtures/annotations/rental-02.annotations.json",
+                                   encoding="utf-8"))["annotations"]
+        if r["expected_status"]}
 
 L = ["# rental-02 — גיליון תיוג",
      "",
@@ -45,9 +50,26 @@ for i, c in enumerate(units, 1):
         L.append(f"*תחת: {c.parent_heading.strip()}*")
     if c.section_number in CAV:
         L.append(f"> ⚠️ {CAV[c.section_number]}")
-    L += ["", "```", c.text.strip(), "```", "", "STATUS: ", "NOTES: ", "", "---", ""]
+    _st, _nt = SEED.get(c.section_number, (None, None))
+    L += ["", "```", c.text.strip(), "```", "",
+          "STATUS: " + (_st or ""), "NOTES: " + (_nt or ""), "", "---", ""]
 
 os.makedirs("data", exist_ok=True)
 P = "data/rental-02.worksheet.md"
+# הגיליון git-ignored. דריסת מילוי שטרם נכתב ל-JSON אינה ניתנת לשחזור.
+if os.path.exists(P) and "--force" not in sys.argv:
+    _raw = open(P, "rb").read()
+    _prev = ""
+    for _enc in ("utf-8-sig", "utf-16", "utf-8"):
+        try:
+            _prev = _raw.decode(_enc); break
+        except UnicodeDecodeError:
+            continue
+    _on_disk = len([1 for _l in _prev.split(chr(10)) if _l.startswith("STATUS:") and _l[7:].strip()])
+    if _on_disk > len(SEED):
+        raise SystemExit(
+            "refusing to overwrite " + P + ": it holds " + str(_on_disk) +
+            " filled STATUS lines but only " + str(len(SEED)) + " are committed to the "
+            "JSON. run: python agents/parse_worksheet.py --write   (or --force to discard)")
 io.open(P, "w", encoding="utf-8", newline="\n").write("\n".join(L))
 print("written:", P, "|", len(units), "units |", os.path.getsize(P), "bytes")

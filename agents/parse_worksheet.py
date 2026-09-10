@@ -61,32 +61,41 @@ def apply(parsed, dry=True, today=None):
         r["annotated_by"], r["annotated_at"] = "yosef", today
         filled += 1
     if not dry:
+        leaks = pii_leaks(d)          # לפני הכתיבה, לא אחריה
+        if leaks:
+            raise ValueError(
+                f"refusing to write: notes in {leaks} copy clause text verbatim. "
+                f"rewrite them in your own words — this file is pushed to GitHub.")
         io.open(J, "w", encoding="utf-8", newline="\n").write(
             json.dumps(d, ensure_ascii=False, indent=2) + "\n")
     return d, filled
+
+def pii_leaks(d):
+    """notes בעברית תקינות. מה שאסור הוא העתקת טקסט מהסעיף — טקסט החוזה מכיל
+    ת.ז וטלפון אמיתיים, וקובץ התוויות נדחף ל-GitHub. 5+ מילים רצופות = העתקה."""
+    contract = re.sub(r"\s+", " ", io.open("fixtures/rental-02.txt", encoding="utf-8").read())
+    out = []
+    for r in d["annotations"]:
+        w = re.sub(r"\s+", " ", (r["notes"] or "").strip()).split()
+        for i in range(len(w) - 4):
+            if " ".join(w[i:i + 5]) in contract:
+                out.append(r["clause_id"]); break
+    return out
 
 def report(d, filled, total):
     c = collections.Counter(str(r["expected_status"]) for r in d["annotations"])
     print(f"\nfilled: {filled}/{total}   left blank (not yet decided): {total-filled}")
     print("distribution:", dict(c))
     scored = [r for r in d["annotations"]
-              if r["expected_status"] is not None and r["annotated_by"] == "yosef"]
+              if r["expected_status"] is not None and r["annotated_by"] != "gervis-draft"]
     print(f"scored comparisons this fixture would contribute: {len(scored)}")
     if scored:
         nonok = sum(1 for r in scored if r["expected_status"] != "ok")
         base = 100.0 * (len(scored) - nonok) / len(scored)
         print(f"non-ok labels: {nonok}/{len(scored)}  ->  an 'always ok' analyzer scores {base:.1f}%")
-    # PII: עברית ב-notes תקינה וצפויה. מה שאסור הוא העתקת טקסט מהסעיף —
-    # לכן בודקים חפיפה מילולית מול החוזה, לא נוכחות עברית.
-    contract = re.sub(r"\s+", " ", io.open("fixtures/rental-02.txt", encoding="utf-8").read())
-    leaks = []
-    for r in d["annotations"]:
-        w = re.sub(r"\s+", " ", (r["notes"] or "").strip()).split()
-        for i in range(len(w) - 4):                 # 5+ מילים רצופות מהחוזה = העתקה
-            if " ".join(w[i:i + 5]) in contract:
-                leaks.append(r["clause_id"]); break
+    leaks = pii_leaks(d)
     print("PII scan on rows: verbatim clause text =",
-          "none" if not leaks else f"LEAK in {leaks}  <-- rewrite those notes in your own words")
+          "none" if not leaks else f"LEAK in {leaks}")
 
 if __name__ == "__main__":
     p = parse()

@@ -11,6 +11,11 @@ pw = importlib.util.module_from_spec(spec); spec.loader.exec_module(pw)
 
 SRC = "data/rental-02.worksheet.md"
 TMP = os.path.join(os.environ.get("TEMP", "/tmp"), "ws_case.md")
+# הגיליון git-ignored ולא קיים ב-clone נקי — לדלג בפירוש, לא ליפול על traceback.
+if not os.path.exists(SRC):
+    print(f"SKIP  {SRC} not present (gitignored worksheet) — nothing to test against")
+    sys.exit(0)
+
 _b = open(SRC, "rb").read()
 for _e in ("utf-8-sig", "utf-16", "utf-8"):
     try:
