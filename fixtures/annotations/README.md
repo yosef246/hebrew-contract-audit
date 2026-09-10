@@ -18,8 +18,9 @@ for every future annotation.
 - `rental-01.annotations.json` — rental-01: baseline-only fixture (all 43 clauses
   gervis-draft, no human-verified labels). Emits an unscored flag rate only — a clean
   LeaseLink template the system should ideally not flag. See Fixture roles below.
-- `rental-02.annotations.json` — rental-02: skeleton, 37 analysis units, all labels
-  `null`. Awaiting human per-clause annotation. See Fixture roles below.
+- `rental-02.annotations.json` — rental-02: 37 analysis units, 8 human-labelled by yosef,
+  29 still `null`. The labelled subset is all `ok`, so it detects false positives only.
+  See the fixture's `provenance.status` for the authoritative state.
 
 ## Entry format
 

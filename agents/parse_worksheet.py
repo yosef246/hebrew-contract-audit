@@ -57,8 +57,14 @@ def apply(parsed, dry=True, today=None):
         st, nt = parsed[r["clause_id"]]
         if st is None:
             continue                       # טרם הוכרע — נשאר null, לא נכתב
+        # שורה שלא השתנתה שומרת על התאריך המקורי. אחרת מחזור
+        # make_worksheet -> parse --write היה דורס את תאריכי ההכרעה האמיתיים,
+        # כי הגיליון נזרע מה-JSON וכל שורה חוזרת כ'מלאה'.
+        unchanged = (r["expected_status"] == st and r["notes"] == nt
+                     and r["annotated_by"] is not None)
         r["expected_status"], r["notes"] = st, nt
-        r["annotated_by"], r["annotated_at"] = "yosef", today
+        if not unchanged:
+            r["annotated_by"], r["annotated_at"] = "yosef", today
         filled += 1
     if not dry:
         leaks = pii_leaks(d)          # לפני הכתיבה, לא אחריה

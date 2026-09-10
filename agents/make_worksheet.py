@@ -65,11 +65,17 @@ if os.path.exists(P) and "--force" not in sys.argv:
             _prev = _raw.decode(_enc); break
         except UnicodeDecodeError:
             continue
-    _on_disk = len([1 for _l in _prev.split(chr(10)) if _l.startswith("STATUS:") and _l[7:].strip()])
-    if _on_disk > len(SEED):
+    _ids, _cur = [], None
+    for _l in _prev.split(chr(10)):
+        if _l.startswith("## ") and "סעיף " in _l:
+            _cur = _l.split("סעיף ", 1)[1].strip()
+        elif _l.startswith("STATUS:") and _l[7:].strip() and _cur:
+            _ids.append(_cur)
+    _extra = sorted(set(_ids) - set(SEED))
+    if _extra:
         raise SystemExit(
-            "refusing to overwrite " + P + ": it holds " + str(_on_disk) +
-            " filled STATUS lines but only " + str(len(SEED)) + " are committed to the "
-            "JSON. run: python agents/parse_worksheet.py --write   (or --force to discard)")
+            "refusing to overwrite " + P + ": it holds labels for " + ", ".join(_extra) +
+            " that are not committed to the JSON. run: "
+            "python agents/parse_worksheet.py --write   (or --force to discard)")
 io.open(P, "w", encoding="utf-8", newline="\n").write("\n".join(L))
 print("written:", P, "|", len(units), "units |", os.path.getsize(P), "bytes")
