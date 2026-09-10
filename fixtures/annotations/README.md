@@ -18,9 +18,9 @@ for every future annotation.
 - `rental-01.annotations.json` — rental-01: baseline-only fixture (all 43 clauses
   gervis-draft, no human-verified labels). Emits an unscored flag rate only — a clean
   LeaseLink template the system should ideally not flag. See Fixture roles below.
-- `rental-02.annotations.json` — rental-02: 37 analysis units, 8 human-labelled by yosef,
-  29 still `null`. The labelled subset is all `ok`, so it detects false positives only.
-  See the fixture's `provenance.status` for the authoritative state.
+- `rental-02.annotations.json` — rental-02: human ground truth, annotation in progress.
+  Counts and the current limitations of the labelled subset live in the file's
+  `provenance.status`, which is authoritative; they are deliberately not repeated here.
 
 ## Entry format
 
@@ -80,8 +80,7 @@ python agents/parse_worksheet.py --write   # applies to the annotation JSON
 - whether `regex` vs `fallback` extraction path governs the outcome.
 
 **Status:** `rental-01`: closed as gervis-draft baseline.
-`rental-02`: human annotation in progress — 8 of 37 labelled, all `ok` so far.
-The labelled subset detects false positives only; see the fixture's `provenance.status`.
+`rental-02`: human annotation in progress — see its `provenance.status` for where it stands.
 `rental-03`: post-F (DOCX support pending).
 
 ## Provenance model

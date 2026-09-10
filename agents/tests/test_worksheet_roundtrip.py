@@ -55,6 +55,11 @@ def test_unchanged_rows_keep_their_date():
     parsed = pw.parse(seeded)
     d, filled = pw.apply(parsed, dry=True, today="2099-01-01")
     rows = {r["clause_id"]: r for r in d["annotations"]}
+    # בלי זה הטסט ירוק גם כשלא נותחה אף שורה: גיליון לא-זרוע מחזיר filled=0,
+    # drifted ריק, והבדיקה עוברת על לא-כלום — בדיוק ה-false-green שהיא נועדה למנוע.
+    assert filled == len(labelled), (
+        f"round-trip exercised {filled} rows but {len(labelled)} are labelled — the seeded worksheet did not reproduce every committed label, so this test proves nothing about them")
+
     drifted = [c for c, r in labelled.items() if rows[c]["annotated_at"] != r["annotated_at"]]
     assert not drifted, (
         f"annotated_at was overwritten on {drifted} — a re-run must not restamp "
