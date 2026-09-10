@@ -14,59 +14,59 @@
   "annotations": [
     {
       "clause_id": "1.1",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "המבוא מחייב כחלק מהחוזה  - נוסח מקובל.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "2",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "הסכמת תקופת השכירות חלה על שני הצדדים.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "3.1",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "מטרת ההשכרה היא אך ורק למה שסוכם בחוזה.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "3.2",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "על השוכרים לקיים את כל ההצהרות הקיימות בחוזה כי לאחר חתימה אין לערער עליהם.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "4.1",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "אין לשנות דבר ממה שכתוב בחוזה",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "4.2",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "כל שינוי שייתבצע חל על השוכרים בלבד והמשכיר רשאי לבקש להחזיר את הדירה לקדמותה על חשבונם.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "5.1",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "על השוכרים לשמור על הדירה כפי שהיא ועל כלל המיתקנים שמצויים בה.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "5.2",
-      "expected_status": null,
-      "notes": null,
-      "annotated_by": null,
-      "annotated_at": null
+      "expected_status": "ok",
+      "notes": "היות והשוכרים מודעים לסביבת הדירה לכן עליהם לכבד את הסביבה ולהתנהג בהתאם.",
+      "annotated_by": "yosef",
+      "annotated_at": "2026-09-10"
     },
     {
       "clause_id": "5.3",
